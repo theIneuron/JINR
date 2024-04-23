@@ -4,31 +4,26 @@ import matplotlib.pyplot as plt
 import scipy as sp
 
 ec2 = 1.44 # charge electron e^2
-a = 0.55 # const
-b = float((np.pi/math.sqrt(3))*a) # const
-Z1 = 40 
-Z2 = 60
-A1 = 90
-A2 = 144
-R1 = 1.28*(A1**(1/3)) - 0.76 + 0.8*(A1**(-1/3))
-R2 = 1.28*(A2**(1/3)) - 0.76 + 0.8*(A2**(-1/3))
-C1 = R1*(1 - (b/R1)**2)
-C2 = R2*(1 - (b/R2)**2)
-RC = (C1*C2)/(C1+C2)
+a = 0.55 #const
+b = float((np.pi/math.sqrt(3))*a) #const
+Z1 = 20 # atomic number for first nuclei
+Z2 = 28 # atomic number for second nuclei
+A1 = 48 # mass number for first nuclei
+A2 = 72 # mass number for second nuclei
+R1 = 1.28*(A1**(1/3)) - 0.76 + 0.8*(A1**(-1/3)) # the effective sharp radius for first nuclei
+R2 = 1.28*(A2**(1/3)) - 0.76 + 0.8*(A2**(-1/3)) # the effective sharp radius for second nuclei
+C1 = R1*(1 - (b/R1)**2) # the Süssmann central radius of the target and projectile 
+C2 = R2*(1 - (b/R2)**2) # the Süssmann central radius of the target and projectile 
+RC = (C1*C2)/(C1+C2) # the mean curvature radius
 #s = r - C1 - C2
 gamma0 = 0.9517
 k = 1.7826
-N1 = A1 - Z1
-N2 = A2 - Z2
-A = ( (N1+N2) - (Z1+Z2) )/(A1+A2)
-gamma_const = gamma0*(1 - k*A)
-#s = r - C1 - C2
-#e = s/b
-e = 1.21
-e2 = 1.25
-#r1 = b*e1 + C1 + C2
-#r2 = b*e2 + C1 + C2
-rmassa = A1 * A2 / (A1 + A2)
+N1 = A1 - Z1 # the number of neutron of first nuclei
+N2 = A2 - Z2 # the number of neutron of second nuclei
+A = ( (N1+N2) - (Z1+Z2) )/(A1+A2) # A is the asymmetry parameter for the compound nucleus, which means drastic reduction in the magnitude of the potential with asymmetry of the colliding pair
+gamma_const = gamma0*(1 - k*A) # The surface energy coefficient gamma  is defined as a function of the neutron/proton excess
+rmassa = A1 * A2 / (A1 + A2) # reduce massa
+
 def gamma(R):
     return -0.67754 + 223358.47648 * np.exp(-0.90292 * R)
 
@@ -51,38 +46,7 @@ def Coul(r, Z1, Z2):
 def calculate_next_R(R, V, dt, gamma, rmassa, dUdR):
     return R + V * dt**2 + (gamma(R) * V / rmassa) * dt**2 - (dUdR * rmassa) * dt**2
 
-import math
-import numpy as np
-import matplotlib.pyplot as plt
 
-import scipy as sp
-
-ec2 = 1.44
-a = 0.55
-b = float((np.pi/math.sqrt(3))*a)
-Z1 = 20
-Z2 = 28
-A1 = 48
-A2 = 72
-R1 = 1.28*(A1**(1/3)) - 0.76 + 0.8*(A1**(-1/3))
-R2 = 1.28*(A2**(1/3)) - 0.76 + 0.8*(A2**(-1/3))
-C1 = R1*(1 - (b/R1)**2)
-C2 = R2*(1 - (b/R2)**2)
-RC = (C1*C2)/(C1+C2)
-#s = r - C1 - C2
-gamma0 = 0.9517
-k = 1.7826
-N1 = A1 - Z1
-N2 = A2 - Z2
-A = ( (N1+N2) - (Z1+Z2) )/(A1+A2)
-gamma_const = gamma0*(1 - k*A)
-#s = r - C1 - C2
-#e = s/b
-e = 1.21
-e2 = 1.25
-#r1 = b*e1 + C1 + C2
-#r2 = b*e2 + C1 + C2
-rmassa = A1 * A2 / (A1 + A2)
 def gamma(R):
     return (-0.67754 + 223358.47648 * np.exp(-0.90292 * R))/10
 
